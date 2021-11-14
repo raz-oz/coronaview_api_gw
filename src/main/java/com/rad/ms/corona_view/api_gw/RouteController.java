@@ -25,6 +25,28 @@ public class RouteController {
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
                         .uri(ACCESS_CLIENT_NAME))
                 .route(p -> p
+                        .path("/permissions")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/permissions/*")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/roles")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/roles/*")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .build();
+    }
+
+    @Bean
+    public RouteLocator dataRoutes(RouteLocatorBuilder builder) {
+        return builder.routes()
+                .route(p -> p
                         .path("/recovered")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8404/fallback")))
                         .uri(ACCESS_DATA_NAME))
@@ -65,6 +87,6 @@ public class RouteController {
 
     @GetMapping("/fallback")
     public String fallback(){
-        return "Page currenly un-available.\n Please try again later.";
+        return "Page currenly un-available.\\n Please try again later.";
     }
 }
