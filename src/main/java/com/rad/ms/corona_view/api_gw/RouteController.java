@@ -10,12 +10,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class RouteController {
 
     private final String ACCESS_CLIENT_NAME = "lb://CORONA-VIEW-ACCESS";
-    private final String ACCESS_DATA_NAME = "lb://CORONA-VIEW-DATA";
+    private final String DATA_CLIENT_NAME = "lb://CORONA-VIEW-DATA";
 
     @Bean
     public RouteLocator accessRoutes(RouteLocatorBuilder builder) {
 
         return builder.routes()
+                .route(p -> p
+                        .path("/login")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/login/*")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/registration")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/registration/*")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
+                .route(p -> p
+                        .path("/home")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(ACCESS_CLIENT_NAME))
                 .route(p -> p
                         .path("/users/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
@@ -40,6 +60,8 @@ public class RouteController {
                         .path("/roles/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
                         .uri(ACCESS_CLIENT_NAME))
+
+
                 .build();
     }
 
@@ -49,44 +71,44 @@ public class RouteController {
                 .route(p -> p
                         .path("/recovered")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/recovered/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/hospitalized")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/hospitalized/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/isolated")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/isolated/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/covidbyarea")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/covidbyarea/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/updatedata")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_DATA_NAME))
+                        .uri(DATA_CLIENT_NAME))
                 .build();
     }
 
     @GetMapping("/fallback")
     public String fallback(){
-        return "Page currenly un-available.\\n Please try again later.";
+        return "Page currenly un-available.";
     }
 }
