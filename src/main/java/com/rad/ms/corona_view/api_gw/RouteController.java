@@ -12,16 +12,17 @@ public class RouteController {
     private final String ACCESS_CLIENT_NAME = "lb://CORONA-VIEW-ACCESS";
     private final String DATA_CLIENT_NAME = "lb://CORONA-VIEW-DATA";
 
+    @GetMapping("/")
+    public String home(){
+        return "API Gateway home page.";
+    }
+
     @Bean
     public RouteLocator accessRoutes(RouteLocatorBuilder builder) {
 
         return builder.routes()
                 .route(p -> p
                         .path("/login")
-                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
-                        .uri(ACCESS_CLIENT_NAME))
-                .route(p -> p
-                        .path("/login/*")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
                         .uri(ACCESS_CLIENT_NAME))
                 .route(p -> p
@@ -68,6 +69,10 @@ public class RouteController {
     @Bean
     public RouteLocator dataRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
+                .route(p -> p
+                        .path("/login/*")
+                        .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
+                        .uri(DATA_CLIENT_NAME))
                 .route(p -> p
                         .path("/recovered")
                         .filters(f -> f.circuitBreaker(config -> config.setFallbackUri("http://localhost:8401/fallback")))
